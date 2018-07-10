@@ -37,10 +37,13 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(res.statusCode);
   const newShortURL = generateRandomString();
+  if (req.body.longURL.includes("http://")) {
   urlDatabase[newShortURL] = req.body.longURL;
   res.redirect(`/urls/${newShortURL}`);
+  } else{
+    res.send(`${req.body.longURL} is not a valid URL. Please follow the example: http://wwww.google.com.`)
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -49,9 +52,12 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  console.log(res.statusCode);
   let longURL = urlDatabase[req.params.shortURL];
+  if (urlDatabase[req.params.shortURL]){
   res.redirect(longURL);
+  } else{
+    res.send(`"${req.params.shortURL}" is not a valid shortened URL.`)
+  }
 });
 
 app.get("/urls.json", (req, res) => {

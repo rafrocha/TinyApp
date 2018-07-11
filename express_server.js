@@ -37,7 +37,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/error", (req, res) => {
-  console.log('req', req.query);
   let templateVars = { errorURL: req.query.brokenlink };
   res.render("urls_errorpage", templateVars);
 });
@@ -54,6 +53,11 @@ app.post("/urls", (req, res) => {
     urlDatabase[newShortURL] = longURL;
     res.redirect(`/urls/${newShortURL}`);
   }
+});
+
+app.post("/urls/:id/delete", (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect("/urls");
 });
 
 app.get("/urls/:id", (req, res) => {

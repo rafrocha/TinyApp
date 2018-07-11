@@ -4,17 +4,20 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <div id="wrapper">
+  <% include partials/_header %>
   <table>
-<% include partials/_header %>
-    <tr><th> URLs </th></tr>
+    <tr><th colspan="4"> URLs </th></tr>
     <% for (var url in urls) { %>
     <tr>
-    <td><a href="u/<%=url%>"> <%= url %></a></td>
+    <td><a href="/urls/<%=url%>"> <%= url %></a></td>
     <td><%= urls[url] %></td>
-    <td><button><form method="POST" action="/urls/<%= url %>/delete"><input type="submit" value="DELETE"></input></form></button></td>
+    <td><form method="POST" action="/urls/<%= url %>/delete"><input class="button" type="submit" value="DELETE"></input></form></td>
+    <td><form method="GET" action="/urls/<%= url %>/edit"><input class="button" type="submit" value="EDIT"></input></form></td>
     </tr>
     <% }; %>
   </table>
     <p><a href="/urls/new"> Shorten another URL </a></p>
+  </div>
 </body>
 </html>

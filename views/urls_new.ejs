@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head></head>
-  <body style="font-size:20px; padding:50px;">
+  <body style="font-size:20px;">
+    <div id="wrapper">
+      <% include partials/_header %>
     <form action="/urls" method="POST" style="margin:150px;">
       <label for="longURL">Enter a URL (Example: www.google.ca):</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+      <input class="inputedURL" id="longURL" type="text" name="longURL" placeholder="http://">
       <input type="submit" value="Submit">
     </form>
+  </div>
   </body>
 </html>

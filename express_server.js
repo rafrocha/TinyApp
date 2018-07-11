@@ -36,8 +36,9 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-app.get("/urls/error", (req, res) => {
-  let templateVars = { errorURL: req.query.brokenlink };
+
+app.get("/urls/:incorrectURL/error", (req, res) => {
+  let templateVars = { errorURL: req.params.incorrectURL };
   res.render("urls_errorpage", templateVars);
 });
 
@@ -45,7 +46,7 @@ app.post("/urls", (req, res) => {
   const newShortURL = generateRandomString();
   let longURL = req.body.longURL;
   if (!longURL.includes("www")) {
-      res.redirect("/urls/error?brokenlink=" + longURL);
+      res.redirect(`/urls/${longURL}/error`);
   } else {
     if (!longURL.startsWith("http")) {
       longURL = "http://" + longURL;
@@ -63,6 +64,24 @@ app.post("/urls/:id/delete", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, urls: urlDatabase };
   res.render("urls_show", templateVars);
+});
+
+app.post("/urls/:id", (req, res) => {
+  let newLongURL = req.body.newLongURL;
+  if (!newLongURL.includes("www")) {
+      res.redirect(`/urls/${newLongURL}/error`);
+  } else {
+    if (!newLongURL.startsWith("http")) {
+      newLongURL = "http://" + newLongURL;
+    }
+  urlDatabase[req.params.id] = newLongURL;
+  res.redirect("/urls");
+}
+});
+
+app.get("/urls/:id/edit", (req, res) => {
+  let short = req.params.id;
+  res.redirect(`/urls/${short}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {

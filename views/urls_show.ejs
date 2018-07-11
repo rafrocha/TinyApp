@@ -4,9 +4,17 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <div id="wrapper">
     <% include partials/_header %>
-    <p> <%= shortURL + ' - ' + urls[shortURL] %></p>
+    <p class="result"> <a href="<%= urls[shortURL] %>"><%= shortURL %></a> - <%= urls[shortURL] %>
+      <form action="/urls/<%= shortURL %>" method="POST" style="margin:50px;">
+            <label for="newLongURL">Enter the new URL for <%= shortURL %>:</label>
+            <input class="inputedURL" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL] %>">
+            <input type="submit" value="Submit">
+          </form>
+    </p>
     <p> <a href="/urls/new"> Try another one! </a> </p>
     <p> <a href="/urls"> Existing Shortened URLs </a> </p>
+  </div>
 </body>
 </html>

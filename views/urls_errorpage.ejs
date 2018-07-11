@@ -4,8 +4,10 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <div id="wrapper">
     <% include partials/_header %>
-    <p> <%= errorURL %> is invalid! </p>
+    <p style="margin:30px;"> <%= errorURL %> is an invalid URL! Please try again. </p>
     <p> <a href="/urls/new"> Try another one! </a> </p>
+  </div>
 </body>
 </html>

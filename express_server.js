@@ -36,13 +36,23 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+app.get("/urls/error", (req, res) => {
+  console.log('req', req.query);
+  let templateVars = { errorURL: req.query.brokenlink };
+  res.render("urls_errorpage", templateVars);
+});
+
 app.post("/urls", (req, res) => {
   const newShortURL = generateRandomString();
-  if (req.body.longURL.includes("http://")) {
-  urlDatabase[newShortURL] = req.body.longURL;
-  res.redirect(`/urls/${newShortURL}`);
-  } else{
-    res.send(`${req.body.longURL} is not a valid URL. Please follow the example: http://wwww.google.com.`)
+  let longURL = req.body.longURL;
+  if (!longURL.includes("www")) {
+      res.redirect("/urls/error?brokenlink=" + longURL);
+  } else {
+    if (!longURL.startsWith("http")) {
+      longURL = "http://" + longURL;
+    }
+    urlDatabase[newShortURL] = longURL;
+    res.redirect(`/urls/${newShortURL}`);
   }
 });
 
@@ -53,10 +63,10 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
-  if (urlDatabase[req.params.shortURL]){
-  res.redirect(longURL);
-  } else{
-    res.send(`"${req.params.shortURL}" is not a valid shortened URL.`)
+  if (longURL) {
+    res.redirect(longURL);
+  } else {
+    res.status(404).send(`"${req.params.shortURL}" is not a valid shortened URL.`);
   }
 });
 

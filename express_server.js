@@ -13,6 +13,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
 function generateRandomString() {
   var text = "";
   var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -26,7 +39,8 @@ function generateRandomString() {
 var tagline = "codes";
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  //add if is logged in, or not (redirect to /login)
+  res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
@@ -34,8 +48,13 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.get("/register", (req, res) => {
+  let templateVars = { urls: urlDatabase, tagline: tagline, username: req.cookies["username"] };
+  res.render("urls_register", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: req.cookies["username"]};
+  let templateVars = { username: req.cookies["username"] };
   res.render("urls_new", templateVars);
 });
 
@@ -71,6 +90,26 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("username");
+  res.redirect("/urls");
+});
+
+app.post("/register", (req, res) => {
+  let newUserId = generateRandomString();
+  let temObject = {};
+  if (req.body.email === "" || req.body.password === "") {
+    res.status(400).send("Please insert a valid username/password.");
+  }
+  for (let keys in users) {
+    if (keys.email === req.body.email) {
+      res.status(400).send("Please insert a valid username/password.");
+    }
+  }
+  temObject.id = newUserId;
+  temObject.email = req.body.email;
+  temObject.password = req.body.password;
+  users[newUserId] = temObject;
+  res.cookie("user_id", newUserId);
+  console.log(users);
   res.redirect("/urls");
 });
 

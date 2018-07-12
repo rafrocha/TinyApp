@@ -99,8 +99,8 @@ app.post("/register", (req, res) => {
   if (req.body.email === "" || req.body.password === "") {
     res.status(400).send("Please insert a valid username/password.");
   }
-  for (let keys in users) {
-    if (keys.email === req.body.email) {
+  for (var keys in users) {
+    if (users[keys].email === req.body.email) {
       res.status(400).send("Please insert a valid username/password.");
     }
   }

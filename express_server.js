@@ -9,8 +9,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "user2RandomID"
+  }
 };
 
 const users = {
@@ -29,10 +35,8 @@ const users = {
 function generateRandomString() {
   var text = "";
   var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
-
   for (var i = 0; i < 6; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
-
   return text;
 }
 
@@ -44,6 +48,7 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
+  console.log(urlDatabase);
   res.render("urls_index", templateVars);
 });
 
@@ -58,8 +63,13 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  let user_id = req.cookies.user_id;
+  if (!user_id){
+    res.redirect("/login");
+  } else {
   let templateVars = { user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_new", templateVars);
+}
 });
 
 
@@ -71,13 +81,16 @@ app.get("/urls/:incorrectURL/error", (req, res) => {
 app.post("/urls", (req, res) => {
   const newShortURL = generateRandomString();
   let longURL = req.body.longURL;
+  let temObject = {};
   if (!longURL.includes("www")) {
     res.redirect(`/urls/${longURL}/error`);
   } else {
     if (!longURL.startsWith("http")) {
       longURL = "http://" + longURL;
     }
-    urlDatabase[newShortURL] = longURL;
+    temObject.longURL = longURL;
+    temObject.userID = req.cookies.user_id;
+    urlDatabase[newShortURL] = temObject;
     res.redirect(`/urls/${newShortURL}`);
   }
 });
@@ -146,7 +159,7 @@ app.post("/urls/:id", (req, res) => {
     if (!newLongURL.startsWith("http")) {
       newLongURL = "http://" + newLongURL;
     }
-    urlDatabase[req.params.id] = newLongURL;
+    urlDatabase[req.params.id].longURL = newLongURL;
     res.redirect("/urls");
   }
 });
@@ -157,7 +170,7 @@ app.get("/urls/:id/edit", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL].longURL;
   if (longURL) {
     res.redirect(longURL);
   } else {

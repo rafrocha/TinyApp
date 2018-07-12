@@ -11,13 +11,17 @@
     <% for (var url in urls) { %>
     <tr>
     <td><a href="/urls/<%=url%>"> <%= url %></a></td>
-    <td><%= urls[url] %></td>
+    <td><%= urls[url].longURL %></td>
     <td><form method="POST" action="/urls/<%= url %>/delete"><input class="button" type="submit" value="DELETE"></input></form></td>
     <td><form method="GET" action="/urls/<%= url %>/edit"><input class="button" type="submit" value="EDIT"></input></form></td>
     </tr>
     <% }; %>
   </table>
+  <% if (user_id) { %>
     <p><a href="/urls/new"> Shorten another URL </a></p>
+ <% } else {%>
+ <p> Log in/Register to shorten a URL</p>
+ <% } %>
   </div>
 </body>
 </html>

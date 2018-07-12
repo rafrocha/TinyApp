@@ -6,14 +6,18 @@
 <body>
   <div id="wrapper">
     <% include partials/_header %>
-    <p class="result"> <a href="<%= urls[shortURL] %>"><%= shortURL %></a> - <%= urls[shortURL] %>
+    <p class="result"> <a href="<%= urls[shortURL] %>"><%= shortURL %></a> - <%= urls[shortURL].longURL %>
       <form action="/urls/<%= shortURL %>" method="POST" style="margin:50px;">
             <label for="newLongURL">Enter the new URL for <%= shortURL %>:</label>
-            <input class="inputedURL" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL] %>">
+            <input class="inputedURL" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL].longURL %>">
             <input type="submit" value="Submit">
           </form>
     </p>
-    <p> <a href="/urls/new"> Try another one! </a> </p>
+    <% if (user_id) { %>
+    <p><a href="/urls/new"> Try another one! </a></p>
+ <% } else {%>
+ <p> Log in/Register to shorten a URL</p>
+ <% } %>
     <p> <a href="/urls"> Existing Shortened URLs </a> </p>
   </div>
 </body>

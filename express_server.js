@@ -40,6 +40,19 @@ function generateRandomString() {
   return text;
 }
 
+function getUrlsForUser (id){
+  let newUrlDatabase = {};
+  let temObject = {};
+  for(let [shortUrl, obj] of Object.entries(urlDatabase)){
+    if(obj.userID === id){
+      temObject.longURL = obj.longURL;
+      temObject.userID = obj.userID;
+      newUrlDatabase[shortUrl] = temObject;
+    }
+  }
+  return newUrlDatabase;
+}
+
 
 app.get("/", (req, res) => {
   //add if is logged in, or not (redirect to /login)
@@ -47,8 +60,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
-  console.log(urlDatabase);
+  let urlsForUser = getUrlsForUser(req.cookies.user_id);
+  let templateVars = { urls: urlsForUser, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_index", templateVars);
 });
 
@@ -98,9 +111,9 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:id/delete", (req, res) => {
   let short = req.params.id;
   if (urlDatabase[short].userID === req.cookies.user_id) {
-  delete urlDatabase[req.params.id];
-  res.redirect("/urls");
-}
+    delete urlDatabase[req.params.id];
+    res.redirect("/urls");
+  }
   res.redirect("/urls");
 });
 
@@ -153,7 +166,7 @@ app.post("/register", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let short = req.params.id;
   if (urlDatabase[short].userID !== req.cookies.user_id) {
-    res.redirect("/urls");
+    res.send("Unable to access URL.")
   } else {
     let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
     res.render("urls_show", templateVars);

@@ -1,6 +1,23 @@
 <h1> TINY APP </h1>
 <h2> A URL shortener </h2>
 
+<% if (username) { %>
+<form method="POST" action="/logout">
+  <label for="Log Out"> Logged in as <%= username %></label>
+  <input id ="logout" class="button" type="submit" value="Log Out"></input>
+</form>
+<% } else { %>
+<form action="/login" method="POST" style="margin:100px;">
+  <label for="username">Enter a username: </label>
+  <input class="inputedURL" type="text" name="username" placeholder="Username">
+  <input type="submit" value="Sign in">
+</form>
+<% } %>
+
+
+
+
+
 <style>
 
 tr:hover {
@@ -11,7 +28,7 @@ th {
   text-align: center;
 }
 
-*{
+* {
   margin: 0;
 }
 
@@ -41,7 +58,7 @@ table {
   line-height: 30px;
   color: #000;
   border-radius: 5px;
-  transition: all 0.2s linear ;
+  transition: all 0.2s linear;
   box-shadow: 0px 2.5px 0px 0px #AAA;
 }
 
@@ -52,8 +69,8 @@ table {
 input.inputedURL {
   width: 300px;
 }
-p.result{
+
+p.result {
   padding: 10px 0px 10px 0px;
 }
-
 </style>

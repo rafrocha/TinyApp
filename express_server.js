@@ -58,18 +58,18 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
+  let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_login", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   let user_id = req.cookies.user_id;
-  if (!user_id){
+  if (!user_id) {
     res.redirect("/login");
   } else {
-  let templateVars = { user: users[req.cookies.user_id], user_id: req.cookies.user_id };
-  res.render("urls_new", templateVars);
-}
+    let templateVars = { user: users[req.cookies.user_id], user_id: req.cookies.user_id };
+    res.render("urls_new", templateVars);
+  }
 });
 
 
@@ -96,7 +96,11 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
+  let short = req.params.id;
+  if (urlDatabase[short].userID === req.cookies.user_id) {
   delete urlDatabase[req.params.id];
+  res.redirect("/urls");
+}
   res.redirect("/urls");
 });
 
@@ -111,10 +115,10 @@ app.post("/login", (req, res) => {
       validEmailID = keys;
     }
   }
-  if(emailExists === false){
+  if (emailExists === false) {
     res.status(403).send("Invalid credentials.");
   }
-  if(users[validEmailID].password !== password){
+  if (users[validEmailID].password !== password) {
     res.status(403).send("Invalid credentials.");
   }
   res.cookie("user_id", validEmailID);
@@ -147,8 +151,13 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
-  res.render("urls_show", templateVars);
+  let short = req.params.id;
+  if (urlDatabase[short].userID !== req.cookies.user_id) {
+    res.redirect("/urls");
+  } else {
+    let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
+    res.render("urls_show", templateVars);
+  }
 });
 
 app.post("/urls/:id", (req, res) => {
@@ -166,7 +175,11 @@ app.post("/urls/:id", (req, res) => {
 
 app.get("/urls/:id/edit", (req, res) => {
   let short = req.params.id;
-  res.redirect(`/urls/${short}`);
+  if (urlDatabase[short].userID === req.cookies.user_id) {
+    res.redirect(`/urls/${short}`);
+  } else {
+    res.redirect("/urls");
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {

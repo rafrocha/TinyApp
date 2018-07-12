@@ -1,7 +1,8 @@
-var express = require("express");
-var app = express();
-var PORT = 8080; // default port 8080
-var cookieParser = require('cookie-parser')
+const express = require("express");
+const app = express();
+const PORT = 8080; // default port 8080
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 app.set("view engine", "ejs")
 
 const bodyParser = require("body-parser");
@@ -131,7 +132,7 @@ app.post("/login", (req, res) => {
   if (emailExists === false) {
     res.status(403).send("Invalid credentials.");
   }
-  if (users[validEmailID].password !== password) {
+  if (!bcrypt.compareSync(password, users[validEmailID].password)) {
     res.status(403).send("Invalid credentials.");
   }
   res.cookie("user_id", validEmailID);
@@ -156,7 +157,8 @@ app.post("/register", (req, res) => {
   }
   temObject.id = newUserId;
   temObject.email = req.body.email;
-  temObject.password = req.body.password;
+  let nonHashedPW = req.body.password;
+  temObject.password = bcrypt.hashSync(nonHashedPW, 10);
   users[newUserId] = temObject;
   res.cookie("user_id", newUserId);
   console.log(users);

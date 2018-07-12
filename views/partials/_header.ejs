@@ -1,22 +1,12 @@
 <h1> TINY APP </h1>
 <h2> A URL shortener </h2>
-
-<% if (username) { %>
-<form method="POST" action="/logout">
-  <label for="Log Out"> Logged in as <%= username %></label>
-  <input id ="logout" class="button" type="submit" value="Log Out"></input>
-</form>
+<% if (user_id) { %>
+<p> Logged in as <%= user.email %></p>
+<form method="POST" action="/logout"><input class="button" type="submit" value="Log Out"></input></form>
 <% } else { %>
-<form action="/login" method="POST" style="margin:100px;">
-  <label for="username">Enter a username: </label>
-  <input class="inputedURL" type="text" name="username" placeholder="Username">
-  <input type="submit" value="Sign in">
-</form>
+<a href="/register"> Register here</a>
+<a href="/login"> Sign in</a>
 <% } %>
-
-
-
-
 
 <style>
 

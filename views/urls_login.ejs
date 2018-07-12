@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title> Tiny App </title>
+</head>
+
+<body style="font-size:20px;">
+  <div id="wrapper">
+    <% include partials/_header %>
+      <form action="/login" method="POST" style="margin:150px;">
+      <label for="email">Email:</label>
+      <input id="username" type="email" name="email" placeholder="example@example.com"><br>
+      <label for="password">Password:</label>
+      <input id="password" type="password" name="password" placeholder="Not your birthday please."><br>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+</body>
+
+</html>

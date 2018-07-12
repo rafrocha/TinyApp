@@ -36,7 +36,6 @@ function generateRandomString() {
   return text;
 }
 
-var tagline = "codes";
 
 app.get("/", (req, res) => {
   //add if is logged in, or not (redirect to /login)
@@ -44,23 +43,28 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, tagline: tagline, username: req.cookies["username"] };
+  let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_index", templateVars);
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = { urls: urlDatabase, tagline: tagline, username: req.cookies["username"] };
+  let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_register", templateVars);
 });
 
+app.get("/login", (req, res) => {
+    let templateVars = { urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
+  res.render("urls_login", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: req.cookies["username"] };
+  let templateVars = { user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_new", templateVars);
 });
 
 
 app.get("/urls/:incorrectURL/error", (req, res) => {
-  let templateVars = { errorURL: req.params.incorrectURL, username: req.cookies["username"], };
+  let templateVars = { errorURL: req.params.incorrectURL, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_errorpage", templateVars);
 });
 
@@ -84,12 +88,28 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/urls");
+  let emailExists = false;
+  let email = req.body.email;
+  let password = req.body.password;
+  let validEmailID = "";
+  for (var keys in users) {
+    if (users[keys].email === email) {
+      emailExists = true;
+      validEmailID = keys;
+    }
+  }
+  if(emailExists === false){
+    res.status(403).send("Invalid credentials.");
+  }
+  if(users[validEmailID].password !== password){
+    res.status(403).send("Invalid credentials.");
+  }
+  res.cookie("user_id", validEmailID);
+  res.redirect("/");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
@@ -114,7 +134,7 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, urls: urlDatabase, username: req.cookies["username"] };
+  let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: users[req.cookies.user_id], user_id: req.cookies.user_id };
   res.render("urls_show", templateVars);
 });
 

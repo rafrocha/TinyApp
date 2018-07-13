@@ -3,6 +3,8 @@ const app = express();
 const PORT = 8080; // default port 8080
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override')
+app.use(methodOverride("_method"));
 app.set("view engine", "ejs")
 
 const bodyParser = require("body-parser");
@@ -140,7 +142,7 @@ app.post("/urls", (req, res) => {
 });
 
 //POST call from submit button on /show page. Edits longURL.
-app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   let newLongURL = req.body.newLongURL;
   if (!newLongURL.includes("www")) {
     res.redirect(`/urls/${newLongURL}/error`);
@@ -154,7 +156,7 @@ app.post("/urls/:id", (req, res) => {
 });
 
 // Deletes short URL created. POST from DELETE button on /urls.
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id", (req, res) => {
   let short = req.params.id;
   if (urlDatabase[short].userID === req.session.user_id) {
     delete urlDatabase[req.params.id];

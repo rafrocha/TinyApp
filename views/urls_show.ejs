@@ -21,7 +21,7 @@
         </a> -
         <%= urls[shortURL].longURL %>
       </p>
-      <form action="/urls/<%= shortURL %>" method="POST">
+      <form action="/urls/<%= shortURL %>/?_method=PUT" method="POST">
         <label for="newLongURL">Enter the new URL for
           <%= shortURL %>:</label>
         <input class="form-control" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL].longURL %>">

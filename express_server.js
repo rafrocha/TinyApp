@@ -35,6 +35,7 @@ const users = {
     password: "dishwasher-funk"
   }
 }
+
 // Random shortURL and UserID generator.
 function generateRandomString() {
   let text = "";
@@ -69,7 +70,6 @@ app.get("/urls", (req, res) => {
   let templateVars = { urls: urlsForUser, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_index", templateVars);
 });
-
 
 //Page to creat new short URL.
 app.get("/urls/new", (req, res) => {
@@ -114,7 +114,6 @@ app.get("/login", (req, res) => {
   let templateVars = { urls: urlDatabase, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_login", templateVars);
 });
-
 
 //Calls the URL error page if /urls/:id short URL doesnt exist.
 app.get("/urls/:incorrectURL/error", (req, res) => {
@@ -182,7 +181,6 @@ app.post("/login", (req, res) => {
   if (!bcrypt.compareSync(password, users[validEmailID].password)) {
     res.status(403).send("Invalid credentials.");
   }
-  // res.cookie("user_id", validEmailID);
   req.session.user_id = validEmailID;
   res.redirect("/");
 });
@@ -211,7 +209,6 @@ app.post("/register", (req, res) => {
   let nonHashedPW = req.body.password;
   temObject.password = bcrypt.hashSync(nonHashedPW, 10);
   users[newUserId] = temObject;
-  // res.cookie("user_id", newUserId);
   req.session.user_id = newUserId;
   console.log(users);
   res.redirect("/urls");
@@ -231,7 +228,6 @@ app.get("/u/:shortURL", (req, res) => {
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
-
 
 app.listen(PORT, () => {
   console.log(`Tiny App listening on port ${PORT}!`);

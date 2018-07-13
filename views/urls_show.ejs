@@ -11,7 +11,9 @@
 </head>
 
 <body>
-  <div id="wrapper">
+  <div style="margin: auto;">
+    <h1> TINY APP </h1>
+<h5> A URL shortener </h5>
     <% include partials/_header %>
       <p style="margin: 30px 0px 30px 0px">
         <a href="<%= urls[shortURL].longURL %>">
@@ -30,7 +32,7 @@
         <% } else {%>
           <p> Log in/Register to shorten a URL</p>
           <% } %>
-            <p> <a href="/urls"> Back to URls </a> </p>
+            <p> <a href="/urls"> Back to URLs </a> </p>
   </div>
 </body>
 </div>

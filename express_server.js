@@ -45,11 +45,11 @@ function generateRandomString() {
   return text;
 }
 
-function getUrlsForUser (id){
+function getUrlsForUser(id) {
   let newUrlDatabase = {};
   let temObject = {};
-  for(let [shortUrl, obj] of Object.entries(urlDatabase)){
-    if(obj.userID === id){
+  for (let [shortUrl, obj] of Object.entries(urlDatabase)) {
+    if (obj.userID === id) {
       temObject.longURL = obj.longURL;
       temObject.userID = obj.userID;
       newUrlDatabase[shortUrl] = temObject;

@@ -1,26 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>TinyApp</title>
 </head>
+
 <body>
   <div id="wrapper">
-  <% include partials/_header %>
-  <table>
-    <tr><th colspan="4"> URLs </th></tr>
-    <% for (var url in urls) { %>
-    <tr>
-    <td><a href="/urls/<%=url%>"> <%= url %></a></td>
-    <td><%= urls[url].longURL %></td>
-    <td><form method="POST" action="/urls/<%= url %>/delete"><input class="button" type="submit" value="DELETE"></input></form></td>
-    <td><form method="GET" action="/urls/<%= url %>/edit"><input class="button" type="submit" value="EDIT"></input></form></td>
-    </tr>
-    <% }; %>
-  </table>
-  <% if (user_id) { %>
-    <p><a href="/urls/new"> SHORT URLs </a></p>
- <% } else {%>
- <% } %>
+    <% include partials/_header %>
+      <table>
+        <tr>
+          <th colspan="4"> URLs </th>
+        </tr>
+        <% for (var url in urls) { %>
+          <tr>
+            <td>
+              <a href="/urls/<%=url%>">
+                <%= url %>
+              </a>
+            </td>
+            <td>
+              <%= urls[url].longURL %>
+            </td>
+            <td>
+              <form method="POST" action="/urls/<%= url %>/delete">
+                <input class="button" type="submit" value="DELETE"></input>
+              </form>
+            </td>
+            <td>
+              <form method="GET" action="/urls/<%= url %>/edit">
+                <input class="button" type="submit" value="EDIT"></input>
+              </form>
+            </td>
+          </tr>
+          <% }; %>
+      </table>
+      <% if (user_id) { %>
+        <p><a href="/urls/new"> SHORT URLs </a></p>
+        <% } else {%>
+          <% } %>
   </div>
 </body>
+
 </html>

@@ -13,6 +13,7 @@ app.use(cookieSession({
   keys: ['secret']
 }))
 
+//Url Object database.
 var urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
@@ -23,7 +24,7 @@ var urlDatabase = {
     userID: "user2RandomID"
   }
 };
-
+// Users object database.
 const users = {
   "userRandomID": {
     id: "userRandomID",
@@ -36,15 +37,16 @@ const users = {
     password: "dishwasher-funk"
   }
 }
-
+// Random shortURL and UserID generator.
 function generateRandomString() {
-  var text = "";
-  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
-  for (var i = 0; i < 6; i++)
+  let text = "";
+  let possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < 6; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   return text;
 }
 
+// Filters URLDatabase into new object containing only User_id-specific URLs. (Created by him).
 function getUrlsForUser(id) {
   let newUrlDatabase = {};
   let temObject = {};
@@ -58,28 +60,32 @@ function getUrlsForUser(id) {
   return newUrlDatabase;
 }
 
-
+// Redirects / to /urls.
 app.get("/", (req, res) => {
   //add if is logged in, or not (redirect to /login)
   res.redirect("/urls");
 });
 
+// Main webserver page.
 app.get("/urls", (req, res) => {
   let urlsForUser = getUrlsForUser(req.session.user_id);
   let templateVars = { urls: urlsForUser, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_index", templateVars);
 });
 
+//Register page. Accessable from register link.
 app.get("/register", (req, res) => {
   let templateVars = { urls: urlDatabase, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_register", templateVars);
 });
 
+//Login page. Accessable from login link.
 app.get("/login", (req, res) => {
   let templateVars = { urls: urlDatabase, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_login", templateVars);
 });
 
+//Page to creat new short URL.
 app.get("/urls/new", (req, res) => {
   let user_id = req.session.user_id;
   if (!user_id) {
@@ -90,12 +96,13 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
-
+//Calls the URL error page if /urls/:id short URL doesnt exist.
 app.get("/urls/:incorrectURL/error", (req, res) => {
   let templateVars = { errorURL: req.params.incorrectURL, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_errorpage", templateVars);
 });
 
+//POST to creat a new short URL from urls/new form.
 app.post("/urls", (req, res) => {
   const newShortURL = generateRandomString();
   let longURL = req.body.longURL;
@@ -113,6 +120,7 @@ app.post("/urls", (req, res) => {
   }
 });
 
+// Deletes short URL created. POST from DELETE button on /urls.
 app.post("/urls/:id/delete", (req, res) => {
   let short = req.params.id;
   if (urlDatabase[short].userID === req.session.user_id) {
@@ -122,6 +130,7 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+//Logs user in if Email and Password exist and match. POST from /login page.
 app.post("/login", (req, res) => {
   let emailExists = false;
   let email = req.body.email;
@@ -144,11 +153,14 @@ app.post("/login", (req, res) => {
   res.redirect("/");
 });
 
+//Logs user out. POST from _header. All pages should have it. Except register and login.
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/urls");
 });
 
+//Registers user based on POST from form in /register. Tests if email already exists or inputs are empty strings.
+//Adds new user to Users object.
 app.post("/register", (req, res) => {
   let newUserId = generateRandomString();
   let temObject = {};
@@ -171,6 +183,7 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 });
 
+//GETs specific short URL page. Only owner(creator) of shortURL can access it. User can edit longURL from here.
 app.get("/urls/:id", (req, res) => {
   let short = req.params.id;
   if (urlDatabase[short].userID !== req.session.user_id) {
@@ -181,6 +194,7 @@ app.get("/urls/:id", (req, res) => {
   }
 });
 
+//POST call from submit button on /show page. Edits longURL.
 app.post("/urls/:id", (req, res) => {
   let newLongURL = req.body.newLongURL;
   if (!newLongURL.includes("www")) {
@@ -194,6 +208,7 @@ app.post("/urls/:id", (req, res) => {
   }
 });
 
+//GET from EDIT button on /urls (index ejs) page. Only Owner (creator) of shortURL can edit it.
 app.get("/urls/:id/edit", (req, res) => {
   let short = req.params.id;
   if (urlDatabase[short].userID === req.session.user_id) {
@@ -203,6 +218,7 @@ app.get("/urls/:id/edit", (req, res) => {
   }
 });
 
+//Takes anyone to the longURL when browser calls /u/shorturl. LongURL also accessible through /show (individual shorturl)page.
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL].longURL;
   if (longURL) {

@@ -1,26 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>TinyApp</title>
+  <div class="container-fluid">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>TinyApp</title>
 </head>
+
 <body>
   <div id="wrapper">
-  <% include partials/_header %>
-  <table>
-    <tr><th colspan="4"> URLs </th></tr>
-    <% for (var url in urls) { %>
-    <tr>
-    <td><a href="/urls/<%=url%>"> <%= url %></a></td>
-    <td><%= urls[url].longURL %></td>
-    <td><form method="POST" action="/urls/<%= url %>/delete"><input class="button" type="submit" value="DELETE"></input></form></td>
-    <td><form method="GET" action="/urls/<%= url %>/edit"><input class="button" type="submit" value="EDIT"></input></form></td>
-    </tr>
-    <% }; %>
-  </table>
-  <% if (user_id) { %>
-    <p><a href="/urls/new"> SHORT URLs </a></p>
- <% } else {%>
- <% } %>
+    <% include partials/_header %>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th colspan="4"> URLs </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (var url in urls) { %>
+            <tr>
+              <td>
+                <a href="/urls/<%=url%>">
+                  <%= url %>
+                </a>
+              </td>
+              <td>
+                <%= urls[url].longURL %>
+              </td>
+              <td>
+                <form method="POST" action="/urls/<%= url %>/delete">
+                  <input class="btn btn-outline-dark" type="submit" value="DELETE"></input>
+                </form>
+              </td>
+              <td>
+                <form method="GET" action="/urls/<%= url %>/edit">
+                  <input class="btn btn-outline-dark" type="submit" value="EDIT"></input>
+                </form>
+              </td>
+            </tr>
+            <% }; %>
+        </tbody>
+      </table>
+      <% if (user_id) { %>
+        <p><a href="/urls/new"> SHORT URLs </a></p>
+        <% } else {%>
+          <% } %>
   </div>
 </body>
+</div>
+
 </html>

@@ -1,20 +1,18 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-// const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt');
 app.set("view engine", "ejs")
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cookieParser());
 app.use(cookieSession({
   keys: ['secret']
 }))
 
 //Url Object database.
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
     userID: "userRandomID"
@@ -62,7 +60,6 @@ function getUrlsForUser(id) {
 
 // Redirects / to /urls.
 app.get("/", (req, res) => {
-  //add if is logged in, or not (redirect to /login)
   res.redirect("/urls");
 });
 
@@ -71,6 +68,39 @@ app.get("/urls", (req, res) => {
   let urlsForUser = getUrlsForUser(req.session.user_id);
   let templateVars = { urls: urlsForUser, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_index", templateVars);
+});
+
+
+//Page to creat new short URL.
+app.get("/urls/new", (req, res) => {
+  let user_id = req.session.user_id;
+  if (!user_id) {
+    res.redirect("/login");
+  } else {
+    let templateVars = { user: users[req.session.user_id], user_id: req.session.user_id };
+    res.render("urls_new", templateVars);
+  }
+});
+
+//GETs specific short URL page. Only owner(creator) of shortURL can access it. User can edit longURL from here.
+app.get("/urls/:id", (req, res) => {
+  let short = req.params.id;
+  if (urlDatabase[short].userID !== req.session.user_id) {
+    res.send("Unable to access URL.")
+  } else {
+    let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: users[req.session.user_id], user_id: req.session.user_id };
+    res.render("urls_show", templateVars);
+  }
+});
+
+//GET from EDIT button on /urls (index ejs) page. Only Owner (creator) of shortURL can edit it.
+app.get("/urls/:id/edit", (req, res) => {
+  let short = req.params.id;
+  if (urlDatabase[short].userID === req.session.user_id) {
+    res.redirect(`/urls/${short}`);
+  } else {
+    res.redirect("/urls");
+  }
 });
 
 //Register page. Accessable from register link.
@@ -85,16 +115,6 @@ app.get("/login", (req, res) => {
   res.render("urls_login", templateVars);
 });
 
-//Page to creat new short URL.
-app.get("/urls/new", (req, res) => {
-  let user_id = req.session.user_id;
-  if (!user_id) {
-    res.redirect("/login");
-  } else {
-    let templateVars = { user: users[req.session.user_id], user_id: req.session.user_id };
-    res.render("urls_new", templateVars);
-  }
-});
 
 //Calls the URL error page if /urls/:id short URL doesnt exist.
 app.get("/urls/:incorrectURL/error", (req, res) => {
@@ -117,6 +137,20 @@ app.post("/urls", (req, res) => {
     temObject.userID = req.session.user_id;
     urlDatabase[newShortURL] = temObject;
     res.redirect(`/urls/${newShortURL}`);
+  }
+});
+
+//POST call from submit button on /show page. Edits longURL.
+app.post("/urls/:id", (req, res) => {
+  let newLongURL = req.body.newLongURL;
+  if (!newLongURL.includes("www")) {
+    res.redirect(`/urls/${newLongURL}/error`);
+  } else {
+    if (!newLongURL.startsWith("http")) {
+      newLongURL = "http://" + newLongURL;
+    }
+    urlDatabase[req.params.id].longURL = newLongURL;
+    res.redirect("/urls");
   }
 });
 
@@ -183,40 +217,6 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 });
 
-//GETs specific short URL page. Only owner(creator) of shortURL can access it. User can edit longURL from here.
-app.get("/urls/:id", (req, res) => {
-  let short = req.params.id;
-  if (urlDatabase[short].userID !== req.session.user_id) {
-    res.send("Unable to access URL.")
-  } else {
-    let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: users[req.session.user_id], user_id: req.session.user_id };
-    res.render("urls_show", templateVars);
-  }
-});
-
-//POST call from submit button on /show page. Edits longURL.
-app.post("/urls/:id", (req, res) => {
-  let newLongURL = req.body.newLongURL;
-  if (!newLongURL.includes("www")) {
-    res.redirect(`/urls/${newLongURL}/error`);
-  } else {
-    if (!newLongURL.startsWith("http")) {
-      newLongURL = "http://" + newLongURL;
-    }
-    urlDatabase[req.params.id].longURL = newLongURL;
-    res.redirect("/urls");
-  }
-});
-
-//GET from EDIT button on /urls (index ejs) page. Only Owner (creator) of shortURL can edit it.
-app.get("/urls/:id/edit", (req, res) => {
-  let short = req.params.id;
-  if (urlDatabase[short].userID === req.session.user_id) {
-    res.redirect(`/urls/${short}`);
-  } else {
-    res.redirect("/urls");
-  }
-});
 
 //Takes anyone to the longURL when browser calls /u/shorturl. LongURL also accessible through /show (individual shorturl)page.
 app.get("/u/:shortURL", (req, res) => {
@@ -234,5 +234,5 @@ app.get("/urls.json", (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Tiny App listening on port ${PORT}!`);
 });

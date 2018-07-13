@@ -2,31 +2,37 @@
 <html lang="en">
 
 <head>
-  <title>TinyApp</title>
+  <div class="container-fluid">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>TinyApp</title>
 </head>
 
 <body>
   <div id="wrapper">
     <% include partials/_header %>
-      <p class="result">
+      <p style="margin: 30px 0px 30px 0px">
         <a href="<%= urls[shortURL].longURL %>">
           <%= shortURL %>
         </a> -
         <%= urls[shortURL].longURL %>
-          <form action="/urls/<%= shortURL %>" method="POST" style="margin:50px;">
-            <label for="newLongURL">Enter the new URL for
-              <%= shortURL %>:</label>
-            <input class="inputedURL" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL].longURL %>">
-            <input type="submit" value="Submit">
-          </form>
       </p>
+      <form action="/urls/<%= shortURL %>" method="POST">
+        <label for="newLongURL">Enter the new URL for
+          <%= shortURL %>:</label>
+        <input class="form-control" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL].longURL %>">
+        <button type="submit" class="btn btn-primary">Edit</button>
+      </form>
       <% if (user_id) { %>
-        <p><a href="/urls/new"> Try another one! </a></p>
+        <p><a href="/urls/new"> Short another one! </a></p>
         <% } else {%>
           <p> Log in/Register to shorten a URL</p>
           <% } %>
-            <p> <a href="/urls"> URLs List </a> </p>
+            <p> <a href="/urls"> Back to URls </a> </p>
   </div>
 </body>
+</div>
 
 </html>

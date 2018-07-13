@@ -2,18 +2,24 @@
 <html lang="en">
 
 <head>
-  <title> Tiny App </title>
+  <div class="container-fluid">
+    <title> Tiny App </title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
-<body style="font-size:20px;">
+<body>
   <div id="wrapper">
     <% include partials/_header %>
-      <form action="/urls" method="POST" style="margin:150px;">
+      <form action="/urls" method="POST">
         <label for="longURL">Enter a URL (Example: www.google.ca):</label>
-        <input class="inputedURL" id="longURL" type="text" name="longURL" placeholder="http://">
-        <input type="submit" value="Submit">
+        <input class="form-control" id="longURL" type="text" name="longURL" placeholder="http://">
+        <button type="submit" class="btn btn-primary">Short it!</button>
       </form>
   </div>
 </body>
+</div>
 
 </html>

@@ -50,15 +50,30 @@ function generateRandomString() {
 }
 
 // Filters URLDatabase into new object containing only User_id-specific URLs. (Created by him).
+// function getUrlsForUser(id) {
+//   let newUrlDatabase = {};
+//   let temObject = {};
+//   for (let [shortUrl, obj] of Object.entries(urlDatabase)) {
+//     if (obj.userID === id) {
+//       temObject.longURL = obj.longURL;
+//       temObject.userID = obj.userID;
+//       temObject.count = obj.count;
+//       newUrlDatabase[shortUrl] = temObject;
+//     }
+//   }
+//   return newUrlDatabase;
+// }
+
 function getUrlsForUser(id) {
   let newUrlDatabase = {};
-  let temObject = {};
-  for (let [shortUrl, obj] of Object.entries(urlDatabase)) {
-    if (obj.userID === id) {
-      temObject.longURL = obj.longURL;
-      temObject.userID = obj.userID;
-      temObject.count = obj.count;
-      newUrlDatabase[shortUrl] = temObject;
+  for (let shortURL in urlDatabase) {
+    let short = urlDatabase[shortURL];
+    if (short.userID === id) {
+      newUrlDatabase[shortURL] = {
+        longURL: short.longURL,
+        userID: short.userID,
+        count: short.count
+      }
     }
   }
   return newUrlDatabase;
@@ -72,8 +87,29 @@ app.get("/", (req, res) => {
 // Main webserver page.
 app.get("/urls", (req, res) => {
   let urlsForUser = getUrlsForUser(req.session.user_id);
+  console.log(urlsForUser);
   let templateVars = { urls: urlsForUser, user: users[req.session.user_id], user_id: req.session.user_id };
   res.render("urls_index", templateVars);
+});
+
+//POST to creat a new short URL from urls/new form.
+app.post("/urls", (req, res) => {
+  const newShortURL = generateRandomString();
+  let longURL = req.body.longURL;
+  let temObject = {};
+  if (!longURL.includes("www")) {
+    res.redirect(`/urls/${longURL}/error`);
+  } else {
+    if (!longURL.startsWith("http")) {
+      longURL = "http://" + longURL;
+    }
+    temObject.longURL = longURL;
+    temObject.userID = req.session.user_id;
+    temObject.count = 0;
+    urlDatabase[newShortURL] = temObject;
+    console.log(urlDatabase);
+    res.redirect(`/urls/${newShortURL}`);
+  }
 });
 
 //Page to creat new short URL.
@@ -126,24 +162,6 @@ app.get("/urls/:incorrectURL/error", (req, res) => {
   res.render("urls_errorpage", templateVars);
 });
 
-//POST to creat a new short URL from urls/new form.
-app.post("/urls", (req, res) => {
-  const newShortURL = generateRandomString();
-  let longURL = req.body.longURL;
-  let temObject = {};
-  if (!longURL.includes("www")) {
-    res.redirect(`/urls/${longURL}/error`);
-  } else {
-    if (!longURL.startsWith("http")) {
-      longURL = "http://" + longURL;
-    }
-    temObject.longURL = longURL;
-    temObject.userID = req.session.user_id;
-    temObject.count = 0;
-    urlDatabase[newShortURL] = temObject;
-    res.redirect(`/urls/${newShortURL}`);
-  }
-});
 
 //POST call from submit button on /show page. Edits longURL.
 app.put("/urls/:id", (req, res) => {

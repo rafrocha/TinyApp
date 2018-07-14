@@ -17,11 +17,13 @@ app.use(cookieSession({
 const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
-    userID: "userRandomID"
+    userID: "userRandomID",
+    count: 0
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
-    userID: "user2RandomID"
+    userID: "user2RandomID",
+    count: 0
   }
 };
 // Users object database.
@@ -55,6 +57,7 @@ function getUrlsForUser(id) {
     if (obj.userID === id) {
       temObject.longURL = obj.longURL;
       temObject.userID = obj.userID;
+      temObject.count = obj.count;
       newUrlDatabase[shortUrl] = temObject;
     }
   }
@@ -136,6 +139,7 @@ app.post("/urls", (req, res) => {
     }
     temObject.longURL = longURL;
     temObject.userID = req.session.user_id;
+    temObject.count = 0;
     urlDatabase[newShortURL] = temObject;
     res.redirect(`/urls/${newShortURL}`);
   }
@@ -212,7 +216,6 @@ app.post("/register", (req, res) => {
   temObject.password = bcrypt.hashSync(nonHashedPW, 10);
   users[newUserId] = temObject;
   req.session.user_id = newUserId;
-  console.log(users);
   res.redirect("/urls");
 });
 
@@ -220,6 +223,7 @@ app.post("/register", (req, res) => {
 //Takes anyone to the longURL when browser calls /u/shorturl. LongURL also accessible through /show (individual shorturl)page.
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL].longURL;
+  urlDatabase[req.params.shortURL].count++;
   if (longURL) {
     res.redirect(longURL);
   } else {

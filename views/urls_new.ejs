@@ -10,18 +10,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
-<body>
+<center>
   <div style="margin: auto;">
     <h1> TINY APP </h1>
 <h5> A URL shortener </h5>
     <% include partials/_header %>
-      <form action="/urls" method="POST">
+      <form action="/urls" method="POST" style="width: 300px; margin-top: 70px;">
         <label for="longURL">Enter a URL (Example: www.google.ca):</label>
         <input class="form-control" id="longURL" type="text" name="longURL" placeholder="http://">
-        <button type="submit" class="btn btn-primary">Short it!</button>
+        <button type="submit" class="btn btn-primary" style="margin: 10px 0px 10px 0px;">Short it!</button>
       </form>
   </div>
-</body>
+</center>
 </div>
 
 </html>

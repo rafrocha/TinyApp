@@ -2,15 +2,14 @@
 <html lang="en">
 
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <div class="container-fluid">
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>TinyApp</title>
 </head>
 
-<body>
+<center>
   <div style="margin: auto;">
     <h1> TINY APP </h1>
 <h5> A URL shortener </h5>
@@ -19,14 +18,17 @@
         <a href="<%= urls[shortURL].longURL %>">
           <%= shortURL %>
         </a> -
-        <%= urls[shortURL].longURL %>
+        <%= urls[shortURL].longURL %> <br>
+        Times visited: <%= urls[shortURL].count %>
       </p>
-      <form action="/urls/<%= shortURL %>/?_method=PUT" method="POST">
-        <label for="newLongURL">Enter the new URL for
+      <form action="/urls/<%= shortURL %>/?_method=PUT" method="POST" style="width: 300px;">
+        <label for="newLongURL">Assign new URL to
           <%= shortURL %>:</label>
         <input class="form-control" id="longURL" type="text" name="newLongURL" placeholder="<%= urls[shortURL].longURL %>">
-        <button type="submit" class="btn btn-primary">Edit</button>
+        <button type="submit" class="btn btn-primary" style="margin: 10px 0px 10px 0px;">Edit</button>
       </form>
+      Send to a Friend! <button onclick="copyToClipboard('#p1')"><span class="glyphicon glyphicon-send"></span></button><br>
+      <p hidden id="p1"> localhost:8080/u/<%= shortURL %></p>
       <% if (user_id) { %>
         <p><a href="/urls/new"> Short another one! </a></p>
         <% } else {%>
@@ -34,7 +36,19 @@
           <% } %>
             <p> <a href="/urls"> Back to URLs </a> </p>
   </div>
-</body>
+</center>
 </div>
+
+
+<script>
+  function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+</script>
+
 
 </html>

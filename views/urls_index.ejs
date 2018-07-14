@@ -2,23 +2,25 @@
 <html lang="en">
 
 <head>
+
   <div class="container-fluid">
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>TinyApp</title>
 </head>
 
-<body>
+<center>
   <div style="margin: auto;">
   <h1> TINY APP </h1>
 <h5> A URL shortener </h5>
     <% include partials/_header %>
-      <table class="table table-hover">
+      <table class="table table-hover" style="width: 300px; text-align: center; vertical-align: middle; margin-top:40px;">
         <thead>
           <tr>
-            <th colspan="4"> URLs </th>
+            <% if (user_id) { %>
+              <th colspan="4"> URLs </th>
+        <% } else {%>
+          <% } %>
           </tr>
         </thead>
         <tbody>
@@ -27,7 +29,7 @@
               <td>
                 <a href="/urls/<%=url%>">
                   <%= url %>
-                </a>
+                  </a>
               </td>
               <td>
                 <%= urls[url].longURL %>
@@ -42,6 +44,9 @@
                   <input class="btn btn-outline-dark" type="submit" value="EDIT"></input>
                 </form>
               </td>
+              <td>
+                Visits: <%= urls[url].count %>
+              </td>
             </tr>
             <% }; %>
         </tbody>
@@ -51,7 +56,8 @@
         <% } else {%>
           <% } %>
   </div>
-</body>
+</center>
 </div>
+
 
 </html>

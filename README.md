@@ -4,22 +4,22 @@ TinyApp is a full stack web application built with Node and Express
 
 ## Final Product
 
-!["Screenshot: First Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/urls_edit.png?raw=true)
+!["Screenshot: First Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/First_page.png?raw=true)
 
 
-!["Screenshot: Register Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/urls_edit.png?raw=true)
+!["Screenshot: Register Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/Register_page.png?raw=true)
 
 
-!["Screenshot: Login Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/urls_login.png?raw=true)
+!["Screenshot: Login Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/Login_page.png?raw=true)
 
 
-!["Screenshot: Single URL page (Owner only)"](https://github.com/rafrocha/TinyApp/blob/master/docs/urls_edit.png?raw=true)
+!["Screenshot: Single URL page (Owner only)"](https://github.com/rafrocha/TinyApp/blob/master/docs/Single%20URL_page.png?raw=true)
 
 
-!["Screenshot: Main URLs List Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/urls_edit.png?raw=true)
+!["Screenshot: Main URLs List Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/Main%20URL%20List_page.png?raw=true)
 
 
-!["Screenshot: New URL Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/urls_main.png?raw=true)
+!["Screenshot: New URL Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/New%20URL_page.png?raw=true)
 
 
 ## Dependencies

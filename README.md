@@ -4,32 +4,32 @@ TinyApp is a full stack web application built with Node and Express
 
 ## Final Product
 
-* Initial page
+### Initial page
 
 !["Screenshot: First Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/First_page.png?raw=true)
 
 
-* Registration page
+### Registration page
 
 !["Screenshot: Register Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/Register_page.png?raw=true)
 
 
-* Login page
+### Login page
 
 !["Screenshot: Login Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/Login_page.png?raw=true)
 
 
-* Single URL page. Owner access only. Owner can copy to clipboard and share short link.
+### Single URL page. Owner access only. Owner can copy to clipboard and share short link or edit the URL.
 
 !["Screenshot: Single URL page (Owner only)"](https://github.com/rafrocha/TinyApp/blob/master/docs/Single%20URL_page.png?raw=true)
 
 
-* List of shortened URLs. User's main page.
+### List of shortened URLs. User's main page.
 
-!["Screenshot: Main URLs List Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/Main%20URL%20List_page.png?raw=true)
+!["Screenshot: Main URLs List Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/MainURLList.png?raw=true)
 
 
-* Create a new shortURL
+### Create a new shortURL
 
 !["Screenshot: New URL Page"](https://github.com/rafrocha/TinyApp/blob/master/docs/New%20URL_page.png?raw=true)
 
